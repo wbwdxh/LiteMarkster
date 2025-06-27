@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+
+<body>
+	<noscript>
+		<div
+			style="position: fixed; display: flex; justify-content: center; align-items: center; top: 0; left: 0; flex-direction: column; text-align: center; color:red !important; background-color: white;width: 100vw;height: 100vh;">
+			请使用javascript，不然网页无法正常运行！
+			<br />
+			Please use javascript, otherwise the page won't work!
+		</div>
+	</noscript>
+	<main id="app" app-title="首页" app-name="LiteMarkster" app-auto-mark="true" app-md="true" app-emoji="true"
+		app-anchors="true">
+		<pre class="md"># LiteMarkster——轻量级渲染框架
+高效渲染 Markdown 和 $\KaTeX$[^2]。
+
+支持多种 Markdown 扩展语法：脚注[^1]和 emoji:smiley:。
+
+$$
+\text{\KaTeX 示例：}
+\\\\
+\text{a\\^ 2+b\\^ 2=c\\^ 2\textbackslash\\\\tag\\{1\\}}
+\\\\
+\text{效果：}
+\\\\
+a^2+b^2=c^2\tag{1}
+$$
+
+[^1]: 脚注示例:+1:。
+
+[^2]: 因为 `marked.js` 的缘故，$\KaTeX$ 可能需要多打反斜杠转义。
+</pre>
+	</main>
+	<script type="module" src="./script.js"></script>
+</body>
+
+</html>
