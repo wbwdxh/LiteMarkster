@@ -461,9 +461,9 @@ LiteMarkster.marker = () => {
 				} else {
 					this.textContent = `:${alias}:`;
 				}
-				function closestgemoji(node) {
+				function myclosest(node, e = '.katex') {
 					const element = node instanceof Element ? node : node.parentElement;
-					return element && element.closest('g-emoji');
+					return element && element.closest(e);
 				}
 				document.addEventListener('copy', function (event) {
 					const selection = window.getSelection();
@@ -473,16 +473,16 @@ LiteMarkster.marker = () => {
 					}
 					const clipboardData = event.clipboardData;
 					const range = selection.getRangeAt(0);
-					const startgemoji = closestgemoji(range.startContainer);
-					if (startgemoji) {
-						range.setStartBefore(startgemoji);
+					const start = myclosest(range.startContainer);
+					if (start) {
+						range.setStartBefore(start);
 					}
-					const endgemoji = closestgemoji(range.endContainer);
-					if (endgemoji) {
-						range.setEndAfter(endgemoji);
+					const end = myclosest(range.endContainer);
+					if (end) {
+						range.setEndAfter(end);
 					}
 					const fragment = range.cloneContents();
-					if (!fragment.querySelector('g-emoji')) {
+					if (!fragment.querySelector('g-emoji') && !fragment.querySelector('.katex')) {
 						return;
 					}
 					const htmlContents = Array.prototype.map.call(fragment.childNodes, el => el instanceof Text ? el.textContent : el.outerHTML).join('');
