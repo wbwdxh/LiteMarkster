@@ -533,6 +533,38 @@ LiteMarkster.marker = () => {
 				}
 			});
 		}
+		if (LiteMarkster.find(LiteMarkster.app, "app-emoji-pro") === "true") {
+			await LiteMarkster.getJSON('emoji.json').then(async (data) => {
+				window.proEmojiMap = data;
+			}).then(() => {
+				const emojiMap = window.proEmojiMap;
+				const tmp = ['p', 'em', 'strong', 'li', 'th', 'tb', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', '.emoji'];
+				for (let i = 0; i < tmp.length; i++) {
+					document.querySelectorAll(tmp[i]).forEach((container) => {
+						// 替换子元素为占位符，防止 :emoji: 匹配到子元素内容
+						const childNodes = Array.from(container.childNodes);
+						const placeholders = [];
+						childNodes.forEach((node, idx) => {
+							if (node.nodeType !== Node.TEXT_NODE) {
+								const placeholder = `\uE000CHILDNODE${idx}\uE001`;
+								placeholders.push({ idx, node, placeholder });
+								container.replaceChild(document.createTextNode(placeholder), node);
+							}
+						});
+						container.innerHTML = container.innerHTML.replace(/:([a-zA-Z0-9_\-\+]+):/g, (m, code) => {
+							if (emojiMap[code]) {
+								return emojiMap[code];
+							}
+							return m;
+						});
+						placeholders.forEach(({ idx, node, placeholder }) => {
+							container.innerHTML = container.innerHTML.replace(placeholder, node.outerHTML);
+						});
+					});
+					console.log(`${tmp[i]}'s pro-emojis loaded!`);
+				}
+			});
+		}
 	});
 };
 if (LiteMarkster.find(LiteMarkster.app, "app-auto-mark") === "true") {
