@@ -461,44 +461,44 @@ LiteMarkster.marker = () => {
 				} else {
 					this.textContent = `:${alias}:`;
 				}
-				function myclosest(node, e = '.katex') {
-					const element = node instanceof Element ? node : node.parentElement;
-					return element && element.closest(e);
-				}
-				document.addEventListener('copy', function (event) {
-					const selection = window.getSelection();
-					console.log(selection)
-					if (selection.isCollapsed || !event.clipboardData) {
-						return;
-					}
-					const clipboardData = event.clipboardData;
-					const range = selection.getRangeAt(0);
-					const start = myclosest(range.startContainer);
-					if (start) {
-						range.setStartBefore(start);
-					}
-					const end = myclosest(range.endContainer);
-					if (end) {
-						range.setEndAfter(end);
-					}
-					const fragment = range.cloneContents();
-					if (!fragment.querySelector('g-emoji') && !fragment.querySelector('.katex')) {
-						return;
-					}
-					const htmlContents = Array.prototype.map.call(fragment.childNodes, el => el instanceof Text ? el.textContent : el.outerHTML).join('');
-					// 将 fragment 中的所有 g-emoji 元素替换为 :alias: 文本
-					Array.from(fragment.querySelectorAll('g-emoji')).forEach(el => {
-						const alias = el.getAttribute('alias');
-						const textNode = document.createTextNode(`:${alias}:`);
-						el.parentNode.replaceChild(textNode, el);
-					});
-					clipboardData.setData('text/html', htmlContents);
-					clipboardData.setData('text/plain', katex2tex(fragment).textContent);
-					event.preventDefault();
-				});
 			}
 		}
 		customElements.define('g-emoji', GEmoji);
+		function myclosest(node, e = '.katex') {
+			const element = node instanceof Element ? node : node.parentElement;
+			return element && element.closest(e);
+		}
+		document.addEventListener('copy', function (event) {
+			const selection = window.getSelection();
+			console.log(selection)
+			if (selection.isCollapsed || !event.clipboardData) {
+				return;
+			}
+			const clipboardData = event.clipboardData;
+			const range = selection.getRangeAt(0);
+			const start = myclosest(range.startContainer);
+			if (start) {
+				range.setStartBefore(start);
+			}
+			const end = myclosest(range.endContainer);
+			if (end) {
+				range.setEndAfter(end);
+			}
+			const fragment = range.cloneContents();
+			if (!fragment.querySelector('g-emoji') && !fragment.querySelector('.katex')) {
+				return;
+			}
+			const htmlContents = Array.prototype.map.call(fragment.childNodes, el => el instanceof Text ? el.textContent : el.outerHTML).join('');
+			// 将 fragment 中的所有 g-emoji 元素替换为 :alias: 文本
+			Array.from(fragment.querySelectorAll('g-emoji')).forEach(el => {
+				const alias = el.getAttribute('alias');
+				const textNode = document.createTextNode(`:${alias}:`);
+				el.parentNode.replaceChild(textNode, el);
+			});
+			clipboardData.setData('text/html', htmlContents);
+			clipboardData.setData('text/plain', katex2tex(fragment).textContent);
+			event.preventDefault();
+		});
 	}).then(async () => {
 		/* 支持 :emoji: 语法渲染为 GitHub 风格表情符号 */
 		if (LiteMarkster.find(LiteMarkster.app, "app-emoji") === "true") {
